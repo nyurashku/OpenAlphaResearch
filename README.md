@@ -9,5 +9,21 @@ Photo by <a href="https://unsplash.com/@blunkorama?utm_content=creditCopyText&ut
 
 OpenAlpha Research is focused on delievering white-glove customer service and high-end research to CTA's, Venture Firms and retail investors. We pride ourselves in democratizing finanical research for all.
 
+## Business Goals (About Us)
 
+## Conceptual Models
+
+## Data Model
+
+## Samples
+
+### Sample Input
+
+### Sample Output
+
+### Dashboard Mock Up
+
+## Summary/ Conclusion
+
+## Team Log
 

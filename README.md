@@ -1,5 +1,6 @@
 # TradeGenius
 IST 659 Class Project - Trade Genius
+
 Report By:
 
 Cheromaine Nisa Ornella Smith

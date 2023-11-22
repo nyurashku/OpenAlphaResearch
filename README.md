@@ -1,5 +1,5 @@
 # TradeGenius
-IST 659 Class Project - [OpenAlpha] Research
+IST 659 Class Project - Trade Genius
 
 ![daniel-lloyd-blunk-fernandez-vrSKrUEZsDY-unsplash](https://github.com/nyurashku/OpenAlphaResearch/assets/119478875/df05e211-65da-4677-8184-e3b5d7542617)
 

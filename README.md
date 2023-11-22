@@ -1,5 +1,11 @@
 # TradeGenius
 IST 659 Class Project - Trade Genius
+Report By:
+
+Cheromaine Nisa Ornella Smith
+Ivan Ovalle
+Gavin Grosswald
+Nick Yurashku
 
 ![daniel-lloyd-blunk-fernandez-vrSKrUEZsDY-unsplash](https://github.com/nyurashku/OpenAlphaResearch/assets/119478875/df05e211-65da-4677-8184-e3b5d7542617)
 

@@ -17,7 +17,7 @@ Photo by <a href="https://unsplash.com/@blunkorama?utm_content=creditCopyText&ut
   
 ## Introduction
 
-OpenAlpha Research is focused on delievering white-glove customer service and high-end research to CTA's, Venture Firms and retail investors. We pride ourselves in democratizing finanical research for all.
+TradeGenius is focused on delievering white-glove customer service and high-end research to CTA's, Venture Firms and retail investors. We pride ourselves in democratizing finanical research for all.
 
 ## Business Goals (About Us)
 

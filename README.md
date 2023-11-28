@@ -19,6 +19,10 @@ Photo by <a href="https://unsplash.com/@blunkorama?utm_content=creditCopyText&ut
 
 TradeGenius is focused on delievering white-glove customer service and high-end research to CTA's, Venture Firms and retail investors. We pride ourselves in democratizing finanical research for all.
 
+## Logo
+
+![Black and Grey Clean Modern Minimalist Creative Technology Logo](https://github.com/nyurashku/TradeGenius/assets/119478875/4fb4a4d3-3ac8-4494-aa06-9cec8de18956)
+
 ## Business Goals (About Us)
 
 ## Conceptual Models

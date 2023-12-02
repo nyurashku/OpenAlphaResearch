@@ -27,6 +27,13 @@ TradeGenius is focused on delievering white-glove customer service and high-end 
 
 ## Conceptual Models
 
+### ERD
+
+### Logical Model
+
+![Logical Model](https://github.com/nyurashku/TradeGenius/assets/119478875/1d56b061-956b-46db-b3cf-71f2d694d5f3)
+
+
 ## Data Model
 
 ## Samples

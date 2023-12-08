@@ -234,8 +234,34 @@ VALUES
   (3, 3);
 
 GO
+-- (IV) TRIGGERS
+--TRIGGERS
+drop trigger if exists financial_spendings
+go 
+--UP 
+create trigger financial_spendings 
+on financials
+instead OF insert, update, DELETE
+as begin 
+         if (select top 1  financial_revenue from financials) > (select top 1 financial_expense from inserted) 
+         begin 
+          update financials
+          
+            set financial_expense = inserted.financial_expense
+          from inserted 
+    where inserted.financial_id = financials.financial_id
+    END 
+else begin 
+ print 'Unable to proceed, financials expense has exceeded its revenue '
+ END 
+ END 
+--testing the trigger
+select * from financials
+update financials set financial_expense= 150000000000.00 where financial_id = 1
+update financials set financial_expense= 70000000000.00 where financial_id = 2
 
--- (IIII) Verify Section
+select * from financials
+-- (V) Verify Section
 SELECT * FROM users;
 SELECT * FROM accounts;
 SELECT * FROM watchlists;

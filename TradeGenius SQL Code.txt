@@ -260,7 +260,7 @@ select * from financials
 update financials set financial_expense= 150000000000.00 where financial_id = 1
 update financials set financial_expense= 70000000000.00 where financial_id = 2
 
-select * from financials
+
 -- (V) Verify Section
 SELECT * FROM users;
 SELECT * FROM accounts;

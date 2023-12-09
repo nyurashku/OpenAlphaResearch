@@ -35,7 +35,7 @@ This innovative platform is a state-of-the-art research tool that promises to be
 
 The solution lies in a strategically designed database architecture consisting key tables. Each table is engineered to capture and analyze pertinent data, ensuring users are equipped with holistic and up-to-date information to drive investment decisions.
 
-Platform accessibility is crucial to TradeGenius' success. To achieve widespread reach, TradeGenius will operate under a subscription-based model, an approach that aligns with our vision to 'democratize' access to high-quality financial research. This model not only ensures inclusivity but also underscores our commitment to making impactful contributions to the democratization of financial knowledge.
+Platform accessibility is crucial to TradeGenius' success. To achieve widespread reach, TradeGenius will operate under a subscription-based model, an approach that aligns with our vision to 'democratize' access to high-quality financial research. This model not only ensures inclusivity but also highlights our commitment to making impactful contributions to the democratization of financial knowledge.
 
 
 ## Business Goals (About Us)

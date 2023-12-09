@@ -236,29 +236,55 @@ VALUES
 GO
 -- (IV) TRIGGERS
 --TRIGGERS
-drop trigger if exists financial_spendings
-go 
+--TRIGGERS
+--DOWN
+DROP TRIGGER if exists ticker_daily_change
+GO
+
+
 --UP 
-create trigger financial_spendings 
-on financials
-instead OF insert, update, DELETE
-as begin 
-         if (select top 1  financial_revenue from financials) > (select top 1 financial_expense from inserted) 
-         begin 
-          update financials
+CREATE TRIGGER ticker_daily_change
+ON tickers
+INSTEAD OF INSERT, UPDATE, DELETE
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM inserted)
+    BEGIN
+        IF (
+            SELECT MAX(ticker_daily_high) 
+            FROM tickers 
+            WHERE ticker_daily_high IN (SELECT ticker_daily_high FROM inserted)
+        ) >= (
+            SELECT MIN(ticker_daily_low) 
+            FROM inserted
+        ) OR (
+            SELECT MIN(ticker_daily_low)
+            FROM tickers 
+            WHERE ticker_daily_low IN (SELECT ticker_daily_low FROM inserted)
+        ) <= (
+            SELECT MAX(ticker_daily_high)
+            FROM inserted
+        )
+        BEGIN
+            -- Update ticker_daily_low
+            UPDATE t
+            SET t.ticker_daily_low = i.ticker_daily_low
+            FROM tickers t
+            INNER JOIN inserted i ON t.ticker_id = i.ticker_id;
           
-            set financial_expense = inserted.financial_expense
-          from inserted 
-    where inserted.financial_id = financials.financial_id
-    END 
-else begin 
- print 'Unable to proceed, financials expense has exceeded its revenue '
- END 
- END 
---testing the trigger
-select * from financials
-update financials set financial_expense= 150000000000.00 where financial_id = 1
-update financials set financial_expense= 70000000000.00 where financial_id = 2
+            -- Update ticker_daily_high
+            UPDATE t
+            SET t.ticker_daily_high = i.ticker_daily_high
+            FROM tickers t
+            INNER JOIN inserted i ON t.ticker_id = i.ticker_id;
+        END
+        ELSE
+        BEGIN
+            -- Database constraint error
+            RAISERROR ('Constraint violation', 16, 1);
+        END
+    END
+END;
 
 
 -- (V) Verify Section

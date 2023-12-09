@@ -33,7 +33,7 @@ TradeGenius is founded on the creation of a cutting-edge research tool tailored 
 
 This innovative platform is a state-of-the-art research tool that promises to be a game-changer for all institutions. At its core, the platforms functionality lies in delivering real-time insights into market trends, economic shifts, and offering foundation for generating informed trading ideas.
 
-The solution lies in a strategically designed database architecture consisting key tables. Each table is engineered to capture and analyze pertinent data, ensuring users are equipped with a holistic and up-to-date information repository to drive investment decisions.
+The solution lies in a strategically designed database architecture consisting key tables. Each table is engineered to capture and analyze pertinent data, ensuring users are equipped with holistic and up-to-date information to drive investment decisions.
 
 Platform accessibility is crucial to TradeGenius' success. To achieve widespread reach, TradeGenius will operate under a subscription-based model, an approach that aligns with our vision to 'democratize' access to high-quality financial research. This model not only ensures inclusivity but also underscores our commitment to making impactful contributions to the democratization of financial knowledge.
 

@@ -61,6 +61,9 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 
 ### Dashboard Mock Up
 
+![dashboard](https://github.com/nyurashku/TradeGenius/assets/119478875/4b93115e-48cc-43b6-8eac-c8efc1ff1a84)
+
+
 ## Summary/ Conclusion
 
 ## Team Log

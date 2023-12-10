@@ -1,0 +1,58 @@
+USE tradegenius;
+GO
+
+DROP PROCEDURE IF EXISTS p_delete_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS p_remove_company_from_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS dbo.p_add_company_to_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS dbo.p_create_watch_list;
+GO
+
+CREATE PROCEDURE p_create_watch_list
+@creation_date DATE
+AS
+BEGIN
+    INSERT INTO watchlists (creation_date)
+    VALUES (@creation_date);
+END;
+GO
+
+CREATE PROCEDURE p_add_company_to_watch_list
+@watchlist_id INT,
+@company_id INT, 
+@added_date DATE
+AS
+BEGIN
+    INSERT INTO watchlist_company (watchlist_id, company_id, watchlist_company_added_date)
+    VALUES (@watchlist_id, @company_id, @added_date);
+END;
+GO
+
+CREATE PROCEDURE p_remove_company_from_watch_list 
+@watchlist_id INT, 
+@company_id INT
+AS
+BEGIN
+    DELETE FROM watchlist_company
+    WHERE watchlist_id = @watchlist_id AND company_id = @company_id;
+END;
+GO
+
+CREATE PROCEDURE p_delete_watch_list 
+@watchlist_id INT
+AS
+BEGIN
+    -- First, to remove all companies from the watchlist
+    DELETE FROM watchlist_company
+    WHERE watchlist_id = @watchlist_id;
+
+    -- Then, to delete the watchlist itself
+    DELETE FROM watchlists
+    WHERE watchlist_id = @watchlist_id;
+END;
+GO

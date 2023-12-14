@@ -24,6 +24,9 @@ Photo by <a href="https://unsplash.com/@blunkorama?utm_content=creditCopyText&ut
 
 TradeGenius is focused on delievering white-glove customer service and high-end research to CTA's, Venture Firms and retail investors. We pride ourselves in democratizing finanical research for all.
 
+### Powerpoint Presentation
+
+https://www.canva.com/design/DAF26NlWU_g/iBbicgj2N7FhxXPgOhjHHA/edit?utm_content=DAF26NlWU_g&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
 ## Executive Summary
 

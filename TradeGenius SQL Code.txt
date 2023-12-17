@@ -290,16 +290,50 @@ VALUES
   (1, 1),
   (2, 2),
   (3, 3);
+--Inserting additional DUMMY data
+insert into users ( user_email, user_firstname, user_lastname, user_city, user_state,user_zipcode,user_date_of_birth)
+VALUES 
+ ( 'rbanks@example.com', 'Robin', 'Banks', 'Miami', 'FL', '33101', '1993-03-15'),
+ ( 'ialot@example.com', 'Ivette', 'Alot', 'Las Vegas', 'NV', '88901', '1991-05-29'),
+ ( 'akay@example.com', 'Aryuo', 'Kay', 'Seattle', 'WA', '98101', '1984-02-14'),
+ ( 'iknoe@example.com', 'Idon', 'Knoe', 'Atlanta', 'GA', '30033', '1989-09-23'),
+ ( 'tader@example.com', 'Taxiv', 'Ader', 'Dallas', 'TX', '75001', '1968-04-20')
+
+INSERT INTO accounts (account_type, account_open_date, account_user_id)
+VALUES 
+  ('Retail', '2023-12-12', 1012),
+  ('Retail', '2023-12-12', 1013),
+  ('Journalism', '2023-12-13', 1014),
+  ( 'Retail', '2023-12-13', 1015),
+  ( 'Retail', '2023-12-13', 1016) ;
+------
+INSERT INTO companies (company_ticker, company_name, company_industry, company_founded_date, company_inc_state, company_emp_count, company_description)
+VALUES 
+  ('F', 'Ford Motor Co', 'Automotive', '1903-11-01', 'MI', 48126, 'Manufacture, distribution and sale of automobiles'),
+  ('VZ', 'Verizon Communications Inc', 'Telecom', '1983-01-01', 'NY', 10036, 'Provision of communications, information, and entertainment products and services')
+  
+ INSERT INTO financials (financial_revenue, financial_expense, financial_netincome, financial_assets, financial_liabilities, financial_ebitda, financial_ebit)
+VALUES 
+  (174000000000.00, 166964000000.00, 6162000000.00,268073000000.00 , 223797000000.00, 1378900000.00, 10000000000.00),
+  (134095000000.00, 25863000000.00, 20900000000.00, 384830000000.00, 285700000000.00, 46828000000.00,29502000000.00) 
+--
+INSERT INTO tickers (ticker_name, ticker_ipo_date, ticker_ipo_price, ticker_daily_open, ticker_daily_close, ticker_daily_high, ticker_daily_low, ticker_daily_volume, ticker_market_cap, ticker_pe_ratio, company_id, financial_id)
+VALUES 
+  ('F', '1956-01-18', 2.35, 11.04, 11.23, 11.29, 10.80, 100000000, 44970000000.00, 7.32, 1002, 1002),
+  ('VZ', '2000-07-03', 7.63, 37.07, 37.01, 37.78, 36.46, 32470000.00, 155590000000.00, 7.52, 1003, 1003)
 
 GO
 -- (IV) TRIGGERS
 --TRIGGERS
 --TRIGGERS
 --DOWN
+
+
 DROP TRIGGER if exists ticker_daily_change
 GO
 
-
+DROP trigger if exists t_account_update 
+GO
 --UP 
 CREATE TRIGGER ticker_daily_change
 ON tickers
@@ -344,8 +378,60 @@ BEGIN
     END
 END;
 
+Create trigger t_account_update
+on accounts 
+instead of insert, update , DELETE
+AS BEGIN 
+     IF EXISTS (select count (*) from accounts where account_type = (select inserted.account_type from inserted)
+                 having count (*) < 5) BEGIN
+                 update accounts
+                 set account_type = inserted.account_type
+                 from inserted 
+            WHERE accounts.account_id = inserted.account_id
+            END
+            ELSE BEGIN
+            RAISERROR ('Account Type full: Try a different account type', 17, 1)
+            END
+    END
 
--- (V) Verify Section
+
+(V)  VIEWS
+
+--DOWN
+drop view if exists v_financials
+GO
+--UP
+Create or alter view v_financials
+
+as (
+select c.company_ticker, c.company_name, c.company_industry,c.company_description,
+f.financial_assets - f.financial_liabilities as equity 
+    from companies c
+    join financials f on c.company_id = f.financial_id
+)
+GO 
+
+-- (VI) Verify Section
+
+
+
+--verifying account transfer trigger:
+-- Testing success of the trigger
+select * from accounts where account_id = 3
+update accounts set account_type = 'CTA' where account_id = 3
+select*from accounts where account_id = 3
+
+--Testing failure to update
+
+select * from accounts where account_id = 1004
+update accounts set account_type = 'Retail' where account_id = 1004
+select*from accounts where account_id = 1004
+
+--Verifying View Execution
+select * from v_financials 
+order by equity DESC
+
+
 SELECT * FROM users;
 SELECT * FROM accounts;
 SELECT * FROM watchlists;

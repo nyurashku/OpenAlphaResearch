@@ -1,0 +1,123 @@
+-- Question 1
+Find all the users from the state of New York with a Retail account. Print their names and emails along with their city, state, Zip code and account type.
+Sort by city, then by user’s last /first name.
+Ans:
+SELECT u.user_lastname, u.user_firstname, u.user_email, u.user_city, u.user_state, u.user_zipcode, a.account_type
+FROM users u
+    JOIN accounts a ON u.user_id = a.account_user_id
+WHERE u.user_state = 'NY' and a.account_type = 'Retail'
+ORDER BY user_city, user_lastname, user_firstname
+
+-- Question 2
+Ticker categories. Include the ID, name, industry, and ticker IPO Price. Do not include items of industry  “Automotive”.
+Create a category column based on IPO price.
+When the ticker price is 35 or more, it is a high-priced stock. 
+When the ticker price is 10 or less, it is a low-priced stock.
+Everything else is an average stock. 
+Ans:
+SELECT c.company_ticker, c.company_name,c.company_industry, t.ticker_ipo_price,
+    CASE
+        WHEN t.ticker_ipo_price >= 35 THEN 'High-Priced Stock'
+        WHEN t.ticker_ipo_price <= 10 THEN 'Low-Priced Stock'
+        ELSE 'Average Stock'
+    END AS company_stock_value
+FROM companies c
+    JOIN tickers t ON t.ticker_name = c.company_ticker
+WHERE company_industry!= 'Automotive'
+
+-- Question 3    
+2.	Perform an analysis of companies in the “Technology” and “Financial Services” account types. 
+For each company, display the name, industry type, and employee count. Include the minimum, maximum,
+and average ipo price over each industry type so that the current ipo price can be compared to these values.
+Ans:
+SELECT c.company_name, c.company_industry, t.ticker_ipo_price,
+    avg(ticker_ipo_price) OVER (partition by company_industry) as avg_price,
+    min(ticker_ipo_price) OVER (partition by company_industry) as min_price,
+    max(ticker_ipo_price) OVER (partition by company_industry) as max_price
+from Companies C
+JOIN tickers t on t.ticker_name = c.company_ticker
+where company_industry IN ('Financial Services','Technology')
+order by company_industry
+
+
+-- Question 4
+How many industry types are there? For each industry type, provide the count of companies in that type and 
+the minimum, average, and maximum ipo prices for that type. Sort the output by item type. 
+Ans:
+SELECT c.company_industry, COUNT(*) as company_count,
+    MIN(ticker_ipo_price) as min_price,
+    AVG(ticker_ipo_price) as avg_price,
+    MAX(ticker_ipo_price) AS max_price
+FROM companies c
+    JOIN tickers t on t.ticker_name = c.company_ticker
+GROUP BY company_industry
+ORDER BY company_industry
+
+-- Question 5
+Create a view called v_userinfo that displays the user_id, user name (first last), user name (last, first), 
+date of birth, account creation date and account type.
+Ans:
+CREATE VIEW v_userinfo AS
+SELECT
+    user_id,
+    user_firstname+' '+user_lastname as user_firstlast_name,
+    user_lastname+' '+user_firstname  as user_lastfirst_name,
+    user_date_of_birth,
+    account_open_date,
+    account_type
+FROM users u
+JOIN accounts a ON u.user_id = a.account_user_id
+GO
+
+SELECT * FROM v_userinfo
+
+-- Question 6a
+Write a query on the companies table so that the company_name is broken up into keywords, one per row.
+Ans:
+SELECT
+    company_id,
+    company_ticker,
+    company_name,
+    VALUE as company_keyword
+FROM companies
+CROSS APPLY string_split(company_name, ' ')
+
+-- Question 6b
+Using the query in 6a, create a table-valued function f_search_companies that allows you to
+search the companies by keyword. 
+Ans:
+DROP FUNCTION IF EXISTS f_search_companies
+GO
+
+CREATE FUNCTION f_search_companies(
+    @keyword VARCHAR(100)
+)
+RETURNS TABLE
+AS
+RETURN
+(SELECT
+    company_ticker,
+    company_name
+    FROM companies
+    WHERE EXISTS(
+        SELECT 1
+        FROM string_split(company_name, ' ')
+        WHERE value = @keyword
+    )
+)
+GO
+SELECT * FROM f_search_companies('Inc.')
+
+-- Question 7
+Write an index to improve performance of the query from question 1:
+Ans:
+
+SELECT u.user_lastname, u.user_firstname, u.user_email, u.user_city, u.user_state, u.user_zipcode, a.account_type
+FROM accounts a
+    JOIN users u ON u.user_id = a.account_user_id
+    WHERE u.user_state = 'NY' 
+    and a.account_type = 'Retail'
+ORDER BY user_city, user_lastname, user_firstname
+
+DROP INDEX IF EXISTS ix_user_account_information on accounts
+CREATE INDEX ix_user_account_information ON accounts (account_type)

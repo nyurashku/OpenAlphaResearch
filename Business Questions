@@ -121,3 +121,69 @@ ORDER BY user_city, user_lastname, user_firstname
 
 DROP INDEX IF EXISTS ix_user_account_information on accounts
 CREATE INDEX ix_user_account_information ON accounts (account_type)
+
+
+
+-- Question 8
+Assuming there's a conceptual data requirement that needs to be met, for example no more than 5 accounts can be 
+under the same account type for this platform. Write data logic using an instead-of-trigger to do this.
+
+DROP trigger if exists t_account_update 
+GO
+
+-- UP
+Create trigger t_account_update
+on accounts 
+instead of insert, update , DELETE
+AS BEGIN 
+     IF EXISTS (select count (*) from accounts where account_type = (select inserted.account_type from inserted)
+                 having count (*) < 5) BEGIN
+                 update accounts
+                 set account_type = inserted.account_type
+                 from inserted 
+            WHERE accounts.account_id = inserted.account_id
+            END
+            ELSE BEGIN
+            RAISERROR ('Account Type full: Try a different account type', 17, 1)
+            END
+    END
+
+-- Testing success of the trigger
+select * from accounts where account_id = 3
+update accounts set account_type = 'CTA' where account_id = 3
+select*from accounts where account_id = 3
+
+--Testing failure to update
+
+select * from accounts where account_id = 1004
+update accounts set account_type = 'Retail' where account_id = 1004
+select*from accounts where account_id = 1004
+
+
+-- QUESTION #9
+Create a stored procedure using a view that allows the user to see how the companies are doing in terms of
+assets and liabilities, the difference of assets minus liability will be stored as equity and then it will be sorted
+from best to worst.
+
+--Creating view for company financials
+select*from companies
+select * from financials
+--DOWN
+drop view if exists v_financials
+GO
+
+--UP
+Create or alter view v_financials
+
+as (
+select c.company_ticker, c.company_name, c.company_industry,c.company_description,
+f.financial_assets - f.financial_liabilities as equity 
+    from companies c
+    join financials f on c.company_id = f.financial_id
+)
+GO 
+
+select * from v_financials 
+order by equity DESC
+
+

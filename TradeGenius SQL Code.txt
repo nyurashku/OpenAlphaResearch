@@ -169,14 +169,53 @@ INSERT INTO users (user_email, user_firstname, user_lastname, user_city, user_st
 VALUES 
   ('jdoe@example.com', 'John', 'Doe', 'New York', 'NY', '10001', '1985-01-01'),
   ('asmith@example.com', 'Anna', 'Smith', 'San Francisco', 'CA', '94016', '1990-05-15'),
-  ('tjones@example.com', 'Tom', 'Jones', 'Chicago', 'IL', '60007', '1979-11-23');
+  ('tojone@example.com', 'Tom', 'Jones', 'Chicago', 'IL', '60007', '1979-11-23'),
+  ('rovlight@example.com', 'Ray', 'Ovlight', 'Alexandria Bay', 'NY', '13607', '1960-10-18'),
+  ('pmoss@example.com', 'Pete', 'Moss', 'Alfred', 'NY', '14802', '1979-08-30'),
+  ('cdababbi@example.com', 'Carrie', 'Dababbi', 'Buffalo', 'NY', '14264', '1979-11-23'),
+  ('vrhee@example.com', 'Victor', 'Rhee', 'Lake Placid', 'NY', '12946', '1979-11-23'),
+  ('rabovduexample.com', 'Rose', 'AAbov-Duresst', 'New York', 'NY', '10040', '1970-12-23'),
+  ('omoni@example.com', 'Otto', 'Moni', 'Syracuse', 'NY', '13211', '1989-02-28'),
+  ('sofewe@example.com', 'Seymour', 'Ofewe', 'Rochester', 'NY', '14620', '1995-07-22'),
+  ('tanott@example.com', 'Ty', 'Anott', 'Binghamton', 'NY', '13920', '1999-03-25'),
+  ('herchie@example.com', 'Hank', 'Erchief', 'Syracuse', 'NY', '13210', '1979-01-23'),
+  ('meveyzing@example.com', 'Martin', 'Eyezing', 'New York', 'NY', '10475', '1978-11-23'),
+  ('ppincher@example.com', 'Penny', 'Pincher', 'New Yorkk', 'NY', '11691', '1994-06-18'),
+  ('ostuff@example.com', 'Oliver', 'Stuffismission', 'Syracuse', 'NY', '13031', '1979-11-23'),
+  ('pesther@example.com', 'Polly', 'Esther', 'Hoboken', 'NJ', '07030', '1975-10-31'),
+  ('bcade@example.com', 'Barry', 'Cade', 'Richmond', 'VA', '23210', '1997-09-12'),
+  ('paturn@example.com', 'Paige', 'Turner', 'Atlanta', 'GA', '30360', '1995-01-01'),
+  ('aldent@example.com', 'Al', 'Dente', 'Los Angeles', 'CA', '90050', '2005-04-20'),
+  ('bardwy@example.com', 'Barb', 'Dwyer', 'Chicago', 'IL', '60007', '1979-11-23'),
+  ('aniba@example.com', 'Anita', 'Bath', 'Chicago', 'IL', '60640', '1969-06-18'),
+  ('jtime@example.com', 'Justin', 'Time', 'Chicago', 'IL', '60610', '2000-05-16');
 
 
 INSERT INTO accounts (account_type, account_open_date, account_user_id)
 VALUES 
   ('Retail', '2019-01-01', 1),
   ('CTA', '2020-06-15', 2),
-  ('Journalism', '2021-03-22', 3);
+  ('Journalism', '2021-03-22', 3),
+  ('Retail', '2020-10-01', 4),
+  ('CTA', '2021-11-30', 5),
+  ('Journalism', '2019-11-24', 6),
+  ('Retail', '2020-12-25', 7),
+  ('CTA', '2022-06-25', 8),
+  ('Retail', '2019-03-03', 9),
+  ('Retail', '2021-04-11', 10),
+  ('CTA', '2023-01-15', 11),
+  ('Retail', '2019-10-05', 12),
+  ('Retail', '2020-08-07', 13),
+  ('CTA', '2021-06-12', 14),
+  ('CTA', '2022-07-22', 15),
+  ('Retail', '2023-06-18', 16),
+  ('CTA', '2019-05-05', 17),
+  ('CTA', '2019-10-14', 18),
+  ('Retail', '2021-09-05', 19),
+  ('CTA', '2021-06-01', 20),
+  ('Journalism', '2022-04-20', 21),
+  ('Retail', '2021-08-12', 22);
+
 
 
 INSERT INTO watchlists (creation_date)
@@ -188,9 +227,26 @@ VALUES
 
 INSERT INTO companies (company_ticker, company_name, company_industry, company_founded_date, company_inc_state, company_emp_count, company_description)
 VALUES 
-  ('AAPL', 'Apple Inc.', 'Technology', '1976-04-01', 'CA', 147000, 'Technology company specialized in consumer electronics.'),
+('AAPL', 'Apple Inc.', 'Technology', '1976-04-01', 'CA', 147000, 'Technology company specialized in consumer electronics.'),
   ('MSFT', 'Microsoft Corporation', 'Technology', '1975-04-04', 'WA', 181000, 'Technology company known for its software products.'),
-  ('TSLA', 'Tesla, Inc.', 'Automotive', '2003-07-01', 'CA', 70757, 'Automotive and clean energy company.');
+  ('TSLA', 'Tesla, Inc.', 'Automotive', '2003-07-01', 'CA', 70757, 'Automotive and clean energy company.'),
+  ('AMZN', 'Amazon.com, Inc.', 'E-commerce', '1994-07-05', 'DE', 1300000, 'Online retail giant and other subsidiaries.'),
+  ('GOOGL', 'Alphabet, Inc.', 'Technology', '1998-09-04', 'DE', 135000, 'Parent company of Google and other subsidiaries.'),
+  ('FB', 'Facebook, Inc.', 'Technology', '2004-02-04', 'DE', 60654, 'Social media and technology company.'),
+  ('NFLX', 'Netflix, Inc.', 'Entertainment', '1997-08-29', 'DE', 9400, 'Streaming platform for movies and TV shows.'),
+  ('JPM', 'JP Morgan Chase & Co.', 'Financial Services', '1799-12-01', 'DE', 256981, 'Global banking and finacial services.'),
+  ('JNJ', 'Johnson & Johnson', 'HealthCare', '1886-01-01', 'NJ', 132200, 'pharmaceutical, medical device and consumer goods company.'),
+  ('KO', 'The Coca Cola Company', 'Beverages', '1886-01-29', 'DE', 86200, 'Global beverage company known for its soft drinks.'),
+  ('WMT', 'Walmart, Inc.', 'Retail', '1962-07-02', 'DE', 2300000, 'Multinational retail corporation.'),
+  ('V', 'Visa', 'Financial Services', '1958-09-18', 'DE', 20500, 'Global payments technology company.'),
+  ('PG', 'Proctor & Gamble Co.', 'Consumer Goods', '1837-10-31', 'OH', 97000, 'GLobal consumer goods company.'),
+  ('INTC', 'Intel Corporation', 'Technology', '1968-07-18', 'CA', 110800, 'Semiconductor manufacturing company.'),
+  ('CSCO', 'Cisco Systems, Inc.', 'Technology', '1984-12-10', 'CA', 77500, 'Networking hardware and telecommunications equipment company.'),
+  ('PFE', 'Pizer, Inc.', 'HealthCare', '1849-06-02', 'DE', 78500, 'Pharmaceutical company specializing in biopharmaceuticals.'),
+  ('VZ', 'Verizon Communications, Inc.', 'Telecommunications', '1983-10-7', 'DE', 132200, 'Telecommunication company providing wireless and broadband services.'),
+  ('DIS', 'The Walt Disney Company', 'Entertainment', '1923-10-16', 'DE', 203000, 'MEdia and Entertainment conglomerate.'),
+  ('MCD', 'McDonalds Corporation', 'Restaurants', '1995-04-15', 'DE', 210000, 'Global fast food retaurant chain.'),
+  ('ORCL', 'Oracle Corporation', 'Technology', '1977-06-16', 'DE', 135000, 'Software and technology company specialiing in database management systems.');
 
 
 INSERT INTO financials (financial_revenue, financial_expense, financial_netincome, financial_assets, financial_liabilities, financial_ebitda, financial_ebit)
@@ -211,7 +267,9 @@ INSERT INTO exchange (exchange_name)
 VALUES 
   ('New York Stock Exchange'),
   ('NASDAQ'),
-  ('Chicago Board Options Exchange');
+  ('Chicago Board Options Exchange'),
+  ('BATS Exchange'),
+  ('IEX Group');
 
 
 INSERT INTO exchange_ticker (ticker_id, exchange_id)

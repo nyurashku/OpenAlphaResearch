@@ -49,7 +49,7 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 
 ## Stakeholders
 
-(*) Management Team: Responsible for strategic decisions, overseeing operations, and ensuring that the TradeGenius platform aligns with business goals of democratizing finance.
+* Management Team: Responsible for strategic decisions, overseeing operations, and ensuring that the TradeGenius platform aligns with business goals of democratizing finance.
 Product Development Team: Includes software developers, database administrators, and IT specialists who build and maintain the platform.
 Data Analysts/Scientists: Analyze data to provide the promised TradeGenius research insights, improve user experience, and develop new features.
 Quality Assurance Team: Ensures the platform is reliable, has UI/UX that meets quality standards, and functions as intended.

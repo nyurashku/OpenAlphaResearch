@@ -43,6 +43,29 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 
 ## Business Goals (About Us)
 
+1. Each user can get access to different research for each company and create watchlists with more than one company.
+2. User accounts have different privileges depending on status of whether they are retail,  CTA, etc.
+3. TradeGenius will be able to do an API integration with user’s brokerage where trades can be programmed based on ‘event signals’.
+
+## Stakeholders
+
+(*) Management Team: Responsible for strategic decisions, overseeing operations, and ensuring that the TradeGenius platform aligns with business goals of democratizing finance.
+Product Development Team: Includes software developers, database administrators, and IT specialists who build and maintain the platform.
+Data Analysts/Scientists: Analyze data to provide the promised TradeGenius research insights, improve user experience, and develop new features.
+Quality Assurance Team: Ensures the platform is reliable, has UI/UX that meets quality standards, and functions as intended.
+Marketing and Sales Team: Promotes the platform, identifies market needs, and attracts new users.
+Customer Support Team: Provides support to users, gathers feedback, and helps in resolving issues.
+Finance Department: Manages financial aspects, budgeting, and economic feasibility of the platform.
+Users/Clients: Individual investors, traders, or financial analysts who use the platform for research and decision-making.
+Investors and Shareholders: Provide capital and are interested in the profitability and growth of the platform.
+Regulatory Bodies: Ensure compliance with financial regulations and standards.
+Technology Partners and Vendors: Provide tools, technologies, or services essential for the platform’s operation.
+Academic Institutions: Might use the platform for educational purposes or collaborate on research.
+Media and Industry Analysts: Report on the platform's performance and influence public perception.
+General Public: Especially if the platform impacts broader financial markets or public investing trends.
+
+
+
 ## Conceptual Models
 
 ### ERD

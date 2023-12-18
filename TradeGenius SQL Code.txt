@@ -1,26 +1,46 @@
 -- (I) DOWN Script
 
--- Removing FK constraints first to avoid the dependency issues
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE constraint_name = 'fk_tickers_company')
-    ALTER TABLE tickers DROP CONSTRAINT fk_tickers_company;
+-- Start by dropping FK constraints to avoid dependency issues
+ALTER TABLE user_company DROP CONSTRAINT IF EXISTS fk_user_company_company;
+ALTER TABLE user_company DROP CONSTRAINT IF EXISTS fk_user_company_user;
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE constraint_name = 'fk_tickers_financials')
-    ALTER TABLE tickers DROP CONSTRAINT fk_tickers_financials;
+ALTER TABLE watchlist_company DROP CONSTRAINT IF EXISTS fk_watchlist_company_company;
+ALTER TABLE watchlist_company DROP CONSTRAINT IF EXISTS fk_watchlist_company_watchlist;
 
--- Drop all tables
+ALTER TABLE exchange_ticker DROP CONSTRAINT IF EXISTS fk_exchange_ticker_exchange;
+ALTER TABLE exchange_ticker DROP CONSTRAINT IF EXISTS fk_exchange_ticker_ticker;
+
+ALTER TABLE tickers DROP CONSTRAINT IF EXISTS fk_tickers_financials;
+
+ALTER TABLE tickers DROP CONSTRAINT IF EXISTS fk_tickers_company;
+
+ALTER TABLE accounts DROP CONSTRAINT IF EXISTS fk_accounts_user;
+
+-- Dropping all tables in reverse order of creation
+DROP TABLE IF EXISTS user_company;
+DROP TABLE IF EXISTS watchlist_company;
 DROP TABLE IF EXISTS exchange_ticker;
-DROP TABLE IF EXISTS exchange;
 DROP TABLE IF EXISTS tickers;
 DROP TABLE IF EXISTS financials;
 DROP TABLE IF EXISTS companies;
-DROP TABLE IF EXISTS watchlist_company;
 DROP TABLE IF EXISTS watchlists;
 DROP TABLE IF EXISTS accounts;
-DROP TABLE IF EXISTS user_company;
+DROP TABLE IF EXISTS exchange;
 DROP TABLE IF EXISTS users;
+
+-- Dropping the database
+
+ALTER DATABASE tradegenius SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+DROP DATABASE IF EXISTS tradegenius;
 GO
 
+
 -- (II) META DATA Up Script
+
+CREATE DATABASE tradegenius;
+GO
+USE tradegenius;
+GO
 
 -- Users Table
 CREATE TABLE users (
@@ -58,7 +78,7 @@ CREATE TABLE watchlists (
 -- Companies Table
 CREATE TABLE companies (
     company_id INT IDENTITY NOT NULL,
-    company_ticker VARCHAR(20),
+    company_ticker VARCHAR(20) UNIQUE,
     company_name VARCHAR(255) NOT NULL,
     company_industry VARCHAR(255),
     company_founded_date DATE,
@@ -71,6 +91,7 @@ CREATE TABLE companies (
 -- Financials Table
 CREATE TABLE financials (
     financial_id INT IDENTITY NOT NULL,
+    financial_company_ticker VARCHAR(20),
     financial_revenue DECIMAL(19, 4),
     financial_expense DECIMAL(19, 4),
     financial_netincome DECIMAL(19, 4),
@@ -80,6 +101,10 @@ CREATE TABLE financials (
     financial_ebit DECIMAL(19, 4),
     CONSTRAINT pk_financials_financial_id PRIMARY KEY (financial_id)
 );
+
+ALTER TABLE financials
+    ADD CONSTRAINT fk_financials_company FOREIGN KEY (financial_company_ticker)
+    REFERENCES companies(company_ticker);
 
 -- Tickers Table
 CREATE TABLE tickers (
@@ -249,11 +274,11 @@ VALUES
   ('ORCL', 'Oracle Corporation', 'Technology', '1977-06-16', 'DE', 135000, 'Software and technology company specialiing in database management systems.');
 
 
-INSERT INTO financials (financial_revenue, financial_expense, financial_netincome, financial_assets, financial_liabilities, financial_ebitda, financial_ebit)
+INSERT INTO financials (financial_company_ticker,financial_revenue, financial_expense, financial_netincome, financial_assets, financial_liabilities, financial_ebitda, financial_ebit)
 VALUES 
-  (365000000000.00, 150000000000.00, 94000000000.00, 500000000000.00, 250000000000.00, 110000000000.00, 108000000000.00),
-  (168000000000.00, 70000000000.00, 61000000000.00, 301000000000.00, 183000000000.00, 73000000000.00, 71000000000.00),
-  (31500000000.00, 12000000000.00, 6900000000.00, 55000000000.00, 29000000000.00, 14000000000.00, 13000000000.00);
+  ('AAPL',365000000000.00, 150000000000.00, 94000000000.00, 500000000000.00, 250000000000.00, 110000000000.00, 108000000000.00),
+  ('MSFT',168000000000.00, 70000000000.00, 61000000000.00, 301000000000.00, 183000000000.00, 73000000000.00, 71000000000.00),
+  ('TSLA',31500000000.00, 12000000000.00, 6900000000.00, 55000000000.00, 29000000000.00, 14000000000.00, 13000000000.00);
 
 
 INSERT INTO tickers (ticker_name, ticker_ipo_date, ticker_ipo_price, ticker_daily_open, ticker_daily_close, ticker_daily_high, ticker_daily_low, ticker_daily_volume, ticker_market_cap, ticker_pe_ratio, company_id, financial_id)
@@ -290,7 +315,9 @@ VALUES
   (1, 1),
   (2, 2),
   (3, 3);
+
 --Inserting additional DUMMY data
+
 insert into users ( user_email, user_firstname, user_lastname, user_city, user_state,user_zipcode,user_date_of_birth)
 VALUES 
  ( 'rbanks@example.com', 'Robin', 'Banks', 'Miami', 'FL', '33101', '1993-03-15'),
@@ -301,40 +328,103 @@ VALUES
 
 INSERT INTO accounts (account_type, account_open_date, account_user_id)
 VALUES 
-  ('Retail', '2023-12-12', 1012),
-  ('Retail', '2023-12-12', 1013),
-  ('Journalism', '2023-12-13', 1014),
-  ( 'Retail', '2023-12-13', 1015),
-  ( 'Retail', '2023-12-13', 1016) ;
+  ('Retail', '2023-12-12', 23),
+  ('Retail', '2023-12-12', 24),
+  ('Journalism', '2023-12-13', 25),
+  ( 'Retail', '2023-12-13', 26),
+  ( 'Retail', '2023-12-13', 27);
+
 ------
 INSERT INTO companies (company_ticker, company_name, company_industry, company_founded_date, company_inc_state, company_emp_count, company_description)
 VALUES 
   ('F', 'Ford Motor Co', 'Automotive', '1903-11-01', 'MI', 48126, 'Manufacture, distribution and sale of automobiles'),
-  ('VZ', 'Verizon Communications Inc', 'Telecom', '1983-01-01', 'NY', 10036, 'Provision of communications, information, and entertainment products and services')
+  ('VZ2', 'Verizon Communications Inc', 'Telecom', '1983-01-01', 'NY', 10036, 'Provision of communications, information, and entertainment products and services')
   
- INSERT INTO financials (financial_revenue, financial_expense, financial_netincome, financial_assets, financial_liabilities, financial_ebitda, financial_ebit)
+INSERT INTO financials (financial_company_ticker,financial_revenue, financial_expense, financial_netincome, financial_assets, financial_liabilities, financial_ebitda, financial_ebit)
 VALUES 
-  (174000000000.00, 166964000000.00, 6162000000.00,268073000000.00 , 223797000000.00, 1378900000.00, 10000000000.00),
-  (134095000000.00, 25863000000.00, 20900000000.00, 384830000000.00, 285700000000.00, 46828000000.00,29502000000.00) 
+  ('F',174000000000.00, 166964000000.00, 6162000000.00,268073000000.00 , 223797000000.00, 1378900000.00, 10000000000.00),
+  ('VZ2',134095000000.00, 25863000000.00, 20900000000.00, 384830000000.00, 285700000000.00, 46828000000.00,29502000000.00) 
 --
 INSERT INTO tickers (ticker_name, ticker_ipo_date, ticker_ipo_price, ticker_daily_open, ticker_daily_close, ticker_daily_high, ticker_daily_low, ticker_daily_volume, ticker_market_cap, ticker_pe_ratio, company_id, financial_id)
 VALUES 
-  ('F', '1956-01-18', 2.35, 11.04, 11.23, 11.29, 10.80, 100000000, 44970000000.00, 7.32, 1002, 1002),
-  ('VZ', '2000-07-03', 7.63, 37.07, 37.01, 37.78, 36.46, 32470000.00, 155590000000.00, 7.52, 1003, 1003)
+  ('F', '1956-01-18', 2.35, 11.04, 11.23, 11.29, 10.80, 100000000, 44970000000.00, 7.32, 4, 4),
+  ('VZ2', '2000-07-03', 7.63, 37.07, 37.01, 37.78, 36.46, 32470000.00, 155590000000.00, 7.52, 5, 5)
 
 GO
--- (IV) TRIGGERS
---TRIGGERS
---TRIGGERS
---DOWN
 
+
+-- (IV) TRIGGERS
+
+--DOWN TRIGGERS
+DROP PROCEDURE IF EXISTS p_delete_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS p_remove_company_from_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS dbo.p_add_company_to_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS dbo.p_create_watch_list;
+GO
 
 DROP TRIGGER if exists ticker_daily_change
 GO
 
 DROP trigger if exists t_account_update 
 GO
---UP 
+
+
+--UP TRIGGERS
+
+-- Watchlist trigger
+CREATE PROCEDURE p_create_watch_list
+@creation_date DATE
+AS
+BEGIN
+    INSERT INTO watchlists (creation_date)
+    VALUES (@creation_date);
+END;
+GO
+
+CREATE PROCEDURE p_add_company_to_watch_list
+@watchlist_id INT,
+@company_id INT, 
+@added_date DATE
+AS
+BEGIN
+    INSERT INTO watchlist_company (watchlist_id, company_id, watchlist_company_added_date)
+    VALUES (@watchlist_id, @company_id, @added_date);
+END;
+GO
+
+CREATE PROCEDURE p_remove_company_from_watch_list 
+@watchlist_id INT, 
+@company_id INT
+AS
+BEGIN
+    DELETE FROM watchlist_company
+    WHERE watchlist_id = @watchlist_id AND company_id = @company_id;
+END;
+GO
+
+CREATE PROCEDURE p_delete_watch_list 
+@watchlist_id INT
+AS
+BEGIN
+    -- First, to remove all companies from the watchlist
+    DELETE FROM watchlist_company
+    WHERE watchlist_id = @watchlist_id;
+
+    -- Then, to delete the watchlist itself
+    DELETE FROM watchlists
+    WHERE watchlist_id = @watchlist_id;
+END;
+GO
+
+
+-- ticker trigger
+
 CREATE TRIGGER ticker_daily_change
 ON tickers
 INSTEAD OF INSERT, UPDATE, DELETE
@@ -378,6 +468,8 @@ BEGIN
     END
 END;
 
+-- account update trigger
+
 Create trigger t_account_update
 on accounts 
 instead of insert, update , DELETE
@@ -395,12 +487,15 @@ AS BEGIN
     END
 
 
-(V)  VIEWS
+-- (V)  VIEWS
 
---DOWN
+--DOWN VIEWS
+
 drop view if exists v_financials
 GO
---UP
+
+--UP VIEWS
+
 Create or alter view v_financials
 
 as (
@@ -423,9 +518,9 @@ select*from accounts where account_id = 3
 
 --Testing failure to update
 
-select * from accounts where account_id = 1004
-update accounts set account_type = 'Retail' where account_id = 1004
-select*from accounts where account_id = 1004
+select * from accounts where account_id = 22
+update accounts set account_type = 'Retail' where account_id = 22
+select*from accounts where account_id = 22
 
 --Verifying View Execution
 select * from v_financials 

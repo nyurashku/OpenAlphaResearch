@@ -77,8 +77,6 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 ![Logical Model](https://github.com/nyurashku/TradeGenius/assets/119478875/1d56b061-956b-46db-b3cf-71f2d694d5f3)
 
 
-## Data Model
-
 ## Samples
 
 ### Sample Input
@@ -93,4 +91,15 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 ## Summary/ Conclusion
 
 ## Team Log
+Everyone had equal participation in the project and every task was assigned accordingly after every team meeting. The team worked in sprints in order to finish tasks every day. Tasks and timelines were logged using a platform called Trello. Screenshots of the tasks shown down bellow:
+
+_EXHIBIT I:_ 
+![Trello p1](https://github.com/nyurashku/TradeGenius/assets/119478875/456c4a73-aae6-4047-8876-1e0c0783bc52)
+
+_EXHIBIT II:_ 
+
+![Trello p2](https://github.com/nyurashku/TradeGenius/assets/119478875/f17b5f75-ae3e-4a27-907a-6a747373e4e1)
+
+
+
 

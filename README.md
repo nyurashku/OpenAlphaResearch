@@ -1,6 +1,8 @@
 # TradeGenius
 IST 659 Class Project - Trade Genius
 
+![TradeGenius Final Paper Cover2](https://github.com/nyurashku/TradeGenius/assets/119478875/71b39493-fea8-45ab-8f12-c3d25a31977d)
+
 Report By:
 
 Cheromaine Nisa Ornella Smith

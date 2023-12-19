@@ -3,18 +3,6 @@ IST 659 Class Project - Trade Genius
 
 ![TradeGenius Final Paper Cover2](https://github.com/nyurashku/TradeGenius/assets/119478875/71b39493-fea8-45ab-8f12-c3d25a31977d)
 
-Report By:
-
-Cheromaine Nisa Ornella Smith
-
-Ivan Ovalle
-
-Gavin Grosswald
-
-Nick Yurashku
-
-![daniel-lloyd-blunk-fernandez-vrSKrUEZsDY-unsplash](https://github.com/nyurashku/OpenAlphaResearch/assets/119478875/df05e211-65da-4677-8184-e3b5d7542617)
-
 Photo by <a href="https://unsplash.com/@blunkorama?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Daniel Lloyd Blunk-Fernández</a> on <a href="https://unsplash.com/photos/grayscale-photo-of-statue-of-man-vrSKrUEZsDY?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
 
 ## Logo

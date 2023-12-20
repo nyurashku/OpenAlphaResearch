@@ -1,0 +1,540 @@
+-- (I) DOWN Script
+
+-- Start by dropping FK constraints to avoid dependency issues
+ALTER TABLE user_company DROP CONSTRAINT IF EXISTS fk_user_company_company;
+ALTER TABLE user_company DROP CONSTRAINT IF EXISTS fk_user_company_user;
+
+ALTER TABLE watchlist_company DROP CONSTRAINT IF EXISTS fk_watchlist_company_company;
+ALTER TABLE watchlist_company DROP CONSTRAINT IF EXISTS fk_watchlist_company_watchlist;
+
+ALTER TABLE exchange_ticker DROP CONSTRAINT IF EXISTS fk_exchange_ticker_exchange;
+ALTER TABLE exchange_ticker DROP CONSTRAINT IF EXISTS fk_exchange_ticker_ticker;
+
+ALTER TABLE tickers DROP CONSTRAINT IF EXISTS fk_tickers_financials;
+
+ALTER TABLE tickers DROP CONSTRAINT IF EXISTS fk_tickers_company;
+
+ALTER TABLE accounts DROP CONSTRAINT IF EXISTS fk_accounts_user;
+
+-- Dropping all tables in reverse order of creation
+DROP TABLE IF EXISTS user_company;
+DROP TABLE IF EXISTS watchlist_company;
+DROP TABLE IF EXISTS exchange_ticker;
+DROP TABLE IF EXISTS tickers;
+DROP TABLE IF EXISTS financials;
+DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS watchlists;
+DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS exchange;
+DROP TABLE IF EXISTS users;
+
+-- Dropping the database
+
+ALTER DATABASE tradegenius SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+DROP DATABASE IF EXISTS tradegenius;
+GO
+
+
+-- (II) META DATA Up Script
+
+CREATE DATABASE tradegenius;
+GO
+USE tradegenius;
+GO
+
+-- Users Table
+CREATE TABLE users (
+    user_id INT IDENTITY NOT NULL,
+    user_email VARCHAR(255) NOT NULL UNIQUE,
+    user_firstname VARCHAR(255),
+    user_lastname VARCHAR(255),
+    user_city VARCHAR(255),
+    user_state VARCHAR(50),
+    user_zipcode VARCHAR(20),
+    user_date_of_birth DATE,
+    CONSTRAINT pk_users_user_id PRIMARY KEY (user_id)
+);
+
+-- Accounts Table
+CREATE TABLE accounts (
+    account_id INT IDENTITY NOT NULL,
+    account_type VARCHAR(50),
+    account_open_date DATE,
+    account_user_id INT,
+    CONSTRAINT pk_accounts_account_id PRIMARY KEY (account_id)
+);
+
+ALTER TABLE accounts 
+    ADD CONSTRAINT fk_accounts_user FOREIGN KEY (account_user_id)
+    REFERENCES users(user_id);
+
+-- Watchlists Table
+CREATE TABLE watchlists (
+    watchlist_id INT IDENTITY NOT NULL,
+    creation_date DATE,
+    CONSTRAINT pk_watchlists_watchlist_id PRIMARY KEY (watchlist_id)
+);
+
+-- Companies Table
+CREATE TABLE companies (
+    company_id INT IDENTITY NOT NULL,
+    company_ticker VARCHAR(20) UNIQUE,
+    company_name VARCHAR(255) NOT NULL,
+    company_industry VARCHAR(255),
+    company_founded_date DATE,
+    company_inc_state VARCHAR(50),
+    company_emp_count INT,
+    company_description TEXT,
+    CONSTRAINT pk_companies_company_id PRIMARY KEY (company_id)
+);
+
+-- Financials Table
+CREATE TABLE financials (
+    financial_id INT IDENTITY NOT NULL,
+    financial_company_ticker VARCHAR(20),
+    financial_revenue DECIMAL(19, 4),
+    financial_expense DECIMAL(19, 4),
+    financial_netincome DECIMAL(19, 4),
+    financial_assets DECIMAL(19, 4),
+    financial_liabilities DECIMAL(19, 4),
+    financial_ebitda DECIMAL(19, 4),
+    financial_ebit DECIMAL(19, 4),
+    CONSTRAINT pk_financials_financial_id PRIMARY KEY (financial_id)
+);
+
+ALTER TABLE financials
+    ADD CONSTRAINT fk_financials_company FOREIGN KEY (financial_company_ticker)
+    REFERENCES companies(company_ticker);
+
+-- Tickers Table
+CREATE TABLE tickers (
+    ticker_id INT IDENTITY NOT NULL,
+    ticker_name VARCHAR(20) NOT NULL,
+    ticker_ipo_date DATE,
+    ticker_ipo_price DECIMAL(19, 4),
+    ticker_daily_open DECIMAL(19, 4),
+    ticker_daily_close DECIMAL(19, 4),
+    ticker_daily_high DECIMAL(19, 4),
+    ticker_daily_low DECIMAL(19, 4),
+    ticker_daily_volume BIGINT,
+    ticker_market_cap DECIMAL(19, 4),
+    ticker_pe_ratio DECIMAL(19, 4),
+    company_id INT,
+    financial_id INT,
+    CONSTRAINT pk_tickers_ticker_id PRIMARY KEY (ticker_id)
+);
+
+ALTER TABLE tickers 
+    ADD CONSTRAINT fk_tickers_company FOREIGN KEY (company_id)
+    REFERENCES companies(company_id);
+
+ALTER TABLE tickers 
+    ADD CONSTRAINT fk_tickers_financials FOREIGN KEY (financial_id)
+    REFERENCES financials(financial_id);
+
+-- Exchange Table
+CREATE TABLE exchange (
+    exchange_id INT IDENTITY NOT NULL,
+    exchange_name VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_exchange_exchange_id PRIMARY KEY (exchange_id)
+);
+
+-- Exchange_Ticker Table
+CREATE TABLE exchange_ticker (
+    ticker_id INT,
+    exchange_id INT,
+    CONSTRAINT pk_exchange_ticker PRIMARY KEY (ticker_id, exchange_id)
+);
+
+ALTER TABLE exchange_ticker
+    ADD CONSTRAINT fk_exchange_ticker_ticker FOREIGN KEY (ticker_id)
+    REFERENCES tickers(ticker_id);
+
+ALTER TABLE exchange_ticker
+    ADD CONSTRAINT fk_exchange_ticker_exchange FOREIGN KEY (exchange_id)
+    REFERENCES exchange(exchange_id);
+
+-- Watchlist_Company Table
+CREATE TABLE watchlist_company (
+    watchlist_id INT,
+    company_id INT,
+    watchlist_company_added_date DATE,
+    CONSTRAINT pk_watchlist_company PRIMARY KEY (watchlist_id, company_id)
+);
+
+ALTER TABLE watchlist_company
+    ADD CONSTRAINT fk_watchlist_company_watchlist FOREIGN KEY (watchlist_id)
+    REFERENCES watchlists(watchlist_id);
+
+ALTER TABLE watchlist_company
+    ADD CONSTRAINT fk_watchlist_company_company FOREIGN KEY (company_id)
+    REFERENCES companies(company_id);
+
+-- User_Company Table
+CREATE TABLE user_company (
+    user_id INT,
+    company_id INT,
+    CONSTRAINT pk_user_company PRIMARY KEY (user_id, company_id)
+);
+
+ALTER TABLE user_company
+    ADD CONSTRAINT fk_user_company_user FOREIGN KEY (user_id)
+    REFERENCES users(user_id);
+
+ALTER TABLE user_company
+    ADD CONSTRAINT fk_user_company_company FOREIGN KEY (company_id)
+    REFERENCES companies(company_id);
+GO
+
+
+
+-- (III) DUMMY UP Data
+
+INSERT INTO users (user_email, user_firstname, user_lastname, user_city, user_state, user_zipcode, user_date_of_birth)
+VALUES 
+  ('jdoe@example.com', 'John', 'Doe', 'New York', 'NY', '10001', '1985-01-01'),
+  ('asmith@example.com', 'Anna', 'Smith', 'San Francisco', 'CA', '94016', '1990-05-15'),
+  ('tojone@example.com', 'Tom', 'Jones', 'Chicago', 'IL', '60007', '1979-11-23'),
+  ('rovlight@example.com', 'Ray', 'Ovlight', 'Alexandria Bay', 'NY', '13607', '1960-10-18'),
+  ('pmoss@example.com', 'Pete', 'Moss', 'Alfred', 'NY', '14802', '1979-08-30'),
+  ('cdababbi@example.com', 'Carrie', 'Dababbi', 'Buffalo', 'NY', '14264', '1979-11-23'),
+  ('vrhee@example.com', 'Victor', 'Rhee', 'Lake Placid', 'NY', '12946', '1979-11-23'),
+  ('rabovduexample.com', 'Rose', 'AAbov-Duresst', 'New York', 'NY', '10040', '1970-12-23'),
+  ('omoni@example.com', 'Otto', 'Moni', 'Syracuse', 'NY', '13211', '1989-02-28'),
+  ('sofewe@example.com', 'Seymour', 'Ofewe', 'Rochester', 'NY', '14620', '1995-07-22'),
+  ('tanott@example.com', 'Ty', 'Anott', 'Binghamton', 'NY', '13920', '1999-03-25'),
+  ('herchie@example.com', 'Hank', 'Erchief', 'Syracuse', 'NY', '13210', '1979-01-23'),
+  ('meveyzing@example.com', 'Martin', 'Eyezing', 'New York', 'NY', '10475', '1978-11-23'),
+  ('ppincher@example.com', 'Penny', 'Pincher', 'New Yorkk', 'NY', '11691', '1994-06-18'),
+  ('ostuff@example.com', 'Oliver', 'Stuffismission', 'Syracuse', 'NY', '13031', '1979-11-23'),
+  ('pesther@example.com', 'Polly', 'Esther', 'Hoboken', 'NJ', '07030', '1975-10-31'),
+  ('bcade@example.com', 'Barry', 'Cade', 'Richmond', 'VA', '23210', '1997-09-12'),
+  ('paturn@example.com', 'Paige', 'Turner', 'Atlanta', 'GA', '30360', '1995-01-01'),
+  ('aldent@example.com', 'Al', 'Dente', 'Los Angeles', 'CA', '90050', '2005-04-20'),
+  ('bardwy@example.com', 'Barb', 'Dwyer', 'Chicago', 'IL', '60007', '1979-11-23'),
+  ('aniba@example.com', 'Anita', 'Bath', 'Chicago', 'IL', '60640', '1969-06-18'),
+  ('jtime@example.com', 'Justin', 'Time', 'Chicago', 'IL', '60610', '2000-05-16');
+
+
+INSERT INTO accounts (account_type, account_open_date, account_user_id)
+VALUES 
+  ('Retail', '2019-01-01', 1),
+  ('CTA', '2020-06-15', 2),
+  ('Journalism', '2021-03-22', 3),
+  ('Retail', '2020-10-01', 4),
+  ('CTA', '2021-11-30', 5),
+  ('Journalism', '2019-11-24', 6),
+  ('Retail', '2020-12-25', 7),
+  ('CTA', '2022-06-25', 8),
+  ('Retail', '2019-03-03', 9),
+  ('Retail', '2021-04-11', 10),
+  ('CTA', '2023-01-15', 11),
+  ('Retail', '2019-10-05', 12),
+  ('Retail', '2020-08-07', 13),
+  ('CTA', '2021-06-12', 14),
+  ('CTA', '2022-07-22', 15),
+  ('Retail', '2023-06-18', 16),
+  ('CTA', '2019-05-05', 17),
+  ('CTA', '2019-10-14', 18),
+  ('Retail', '2021-09-05', 19),
+  ('CTA', '2021-06-01', 20),
+  ('Journalism', '2022-04-20', 21),
+  ('Retail', '2021-08-12', 22);
+
+
+
+INSERT INTO watchlists (creation_date)
+VALUES 
+  ('2022-01-10'),
+  ('2022-05-20'),
+  ('2022-07-15');
+
+
+INSERT INTO companies (company_ticker, company_name, company_industry, company_founded_date, company_inc_state, company_emp_count, company_description)
+VALUES 
+('AAPL', 'Apple Inc.', 'Technology', '1976-04-01', 'CA', 147000, 'Technology company specialized in consumer electronics.'),
+  ('MSFT', 'Microsoft Corporation', 'Technology', '1975-04-04', 'WA', 181000, 'Technology company known for its software products.'),
+  ('TSLA', 'Tesla, Inc.', 'Automotive', '2003-07-01', 'CA', 70757, 'Automotive and clean energy company.'),
+  ('AMZN', 'Amazon.com, Inc.', 'E-commerce', '1994-07-05', 'DE', 1300000, 'Online retail giant and other subsidiaries.'),
+  ('GOOGL', 'Alphabet, Inc.', 'Technology', '1998-09-04', 'DE', 135000, 'Parent company of Google and other subsidiaries.'),
+  ('FB', 'Facebook, Inc.', 'Technology', '2004-02-04', 'DE', 60654, 'Social media and technology company.'),
+  ('NFLX', 'Netflix, Inc.', 'Entertainment', '1997-08-29', 'DE', 9400, 'Streaming platform for movies and TV shows.'),
+  ('JPM', 'JP Morgan Chase & Co.', 'Financial Services', '1799-12-01', 'DE', 256981, 'Global banking and finacial services.'),
+  ('JNJ', 'Johnson & Johnson', 'HealthCare', '1886-01-01', 'NJ', 132200, 'pharmaceutical, medical device and consumer goods company.'),
+  ('KO', 'The Coca Cola Company', 'Beverages', '1886-01-29', 'DE', 86200, 'Global beverage company known for its soft drinks.'),
+  ('WMT', 'Walmart, Inc.', 'Retail', '1962-07-02', 'DE', 2300000, 'Multinational retail corporation.'),
+  ('V', 'Visa', 'Financial Services', '1958-09-18', 'DE', 20500, 'Global payments technology company.'),
+  ('PG', 'Proctor & Gamble Co.', 'Consumer Goods', '1837-10-31', 'OH', 97000, 'GLobal consumer goods company.'),
+  ('INTC', 'Intel Corporation', 'Technology', '1968-07-18', 'CA', 110800, 'Semiconductor manufacturing company.'),
+  ('CSCO', 'Cisco Systems, Inc.', 'Technology', '1984-12-10', 'CA', 77500, 'Networking hardware and telecommunications equipment company.'),
+  ('PFE', 'Pizer, Inc.', 'HealthCare', '1849-06-02', 'DE', 78500, 'Pharmaceutical company specializing in biopharmaceuticals.'),
+  ('VZ', 'Verizon Communications, Inc.', 'Telecommunications', '1983-10-7', 'DE', 132200, 'Telecommunication company providing wireless and broadband services.'),
+  ('DIS', 'The Walt Disney Company', 'Entertainment', '1923-10-16', 'DE', 203000, 'MEdia and Entertainment conglomerate.'),
+  ('MCD', 'McDonalds Corporation', 'Restaurants', '1995-04-15', 'DE', 210000, 'Global fast food retaurant chain.'),
+  ('ORCL', 'Oracle Corporation', 'Technology', '1977-06-16', 'DE', 135000, 'Software and technology company specialiing in database management systems.');
+
+
+INSERT INTO financials (financial_company_ticker,financial_revenue, financial_expense, financial_netincome, financial_assets, financial_liabilities, financial_ebitda, financial_ebit)
+VALUES 
+  ('AAPL',365000000000.00, 150000000000.00, 94000000000.00, 500000000000.00, 250000000000.00, 110000000000.00, 108000000000.00),
+  ('MSFT',168000000000.00, 70000000000.00, 61000000000.00, 301000000000.00, 183000000000.00, 73000000000.00, 71000000000.00),
+  ('TSLA',31500000000.00, 12000000000.00, 6900000000.00, 55000000000.00, 29000000000.00, 14000000000.00, 13000000000.00);
+
+
+INSERT INTO tickers (ticker_name, ticker_ipo_date, ticker_ipo_price, ticker_daily_open, ticker_daily_close, ticker_daily_high, ticker_daily_low, ticker_daily_volume, ticker_market_cap, ticker_pe_ratio, company_id, financial_id)
+VALUES 
+  ('AAPL', '1980-12-12', 22.00, 175.00, 180.00, 182.00, 174.00, 100000000, 2400000000000.00, 35.00, 1, 1),
+  ('MSFT', '1986-03-13', 21.00, 300.00, 310.00, 315.00, 295.00, 35000000, 2300000000000.00, 30.00, 2, 2),
+  ('TSLA', '2010-06-29', 17.00, 900.00, 1000.00, 1020.00, 880.00, 40000000, 1000000000000.00, 120.00, 3, 3);
+
+
+INSERT INTO exchange (exchange_name)
+VALUES 
+  ('New York Stock Exchange'),
+  ('NASDAQ'),
+  ('Chicago Board Options Exchange'),
+  ('BATS Exchange'),
+  ('IEX Group');
+
+
+INSERT INTO exchange_ticker (ticker_id, exchange_id)
+VALUES 
+  (1, 1),
+  (2, 2),
+  (3, 3);
+
+
+INSERT INTO watchlist_company (watchlist_id, company_id, watchlist_company_added_date)
+VALUES 
+  (1, 1, '2022-01-12'),
+  (2, 2, '2022-05-22'),
+  (3, 3, '2022-07-17');
+
+INSERT INTO user_company (user_id, company_id)
+VALUES 
+  (1, 1),
+  (2, 2),
+  (3, 3);
+
+--Inserting additional DUMMY data
+
+insert into users ( user_email, user_firstname, user_lastname, user_city, user_state,user_zipcode,user_date_of_birth)
+VALUES 
+ ( 'rbanks@example.com', 'Robin', 'Banks', 'Miami', 'FL', '33101', '1993-03-15'),
+ ( 'ialot@example.com', 'Ivette', 'Alot', 'Las Vegas', 'NV', '88901', '1991-05-29'),
+ ( 'akay@example.com', 'Aryuo', 'Kay', 'Seattle', 'WA', '98101', '1984-02-14'),
+ ( 'iknoe@example.com', 'Idon', 'Knoe', 'Atlanta', 'GA', '30033', '1989-09-23'),
+ ( 'tader@example.com', 'Taxiv', 'Ader', 'Dallas', 'TX', '75001', '1968-04-20')
+
+INSERT INTO accounts (account_type, account_open_date, account_user_id)
+VALUES 
+  ('Retail', '2023-12-12', 23),
+  ('Retail', '2023-12-12', 24),
+  ('Journalism', '2023-12-13', 25),
+  ( 'Retail', '2023-12-13', 26),
+  ( 'Retail', '2023-12-13', 27);
+
+------
+INSERT INTO companies (company_ticker, company_name, company_industry, company_founded_date, company_inc_state, company_emp_count, company_description)
+VALUES 
+  ('F', 'Ford Motor Co', 'Automotive', '1903-11-01', 'MI', 48126, 'Manufacture, distribution and sale of automobiles'),
+  ('VZ2', 'Verizon Communications Inc', 'Telecom', '1983-01-01', 'NY', 10036, 'Provision of communications, information, and entertainment products and services')
+  
+INSERT INTO financials (financial_company_ticker,financial_revenue, financial_expense, financial_netincome, financial_assets, financial_liabilities, financial_ebitda, financial_ebit)
+VALUES 
+  ('F',174000000000.00, 166964000000.00, 6162000000.00,268073000000.00 , 223797000000.00, 1378900000.00, 10000000000.00),
+  ('VZ2',134095000000.00, 25863000000.00, 20900000000.00, 384830000000.00, 285700000000.00, 46828000000.00,29502000000.00) 
+--
+INSERT INTO tickers (ticker_name, ticker_ipo_date, ticker_ipo_price, ticker_daily_open, ticker_daily_close, ticker_daily_high, ticker_daily_low, ticker_daily_volume, ticker_market_cap, ticker_pe_ratio, company_id, financial_id)
+VALUES 
+  ('F', '1956-01-18', 2.35, 11.04, 11.23, 11.29, 10.80, 100000000, 44970000000.00, 7.32, 4, 4),
+  ('VZ2', '2000-07-03', 7.63, 37.07, 37.01, 37.78, 36.46, 32470000.00, 155590000000.00, 7.52, 5, 5)
+
+GO
+
+
+-- (IV) TRIGGERS
+
+--DOWN TRIGGERS
+DROP PROCEDURE IF EXISTS p_delete_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS p_remove_company_from_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS dbo.p_add_company_to_watch_list;
+GO
+
+DROP PROCEDURE IF EXISTS dbo.p_create_watch_list;
+GO
+
+DROP TRIGGER if exists ticker_daily_change
+GO
+
+DROP trigger if exists t_account_update 
+GO
+
+
+--UP TRIGGERS
+
+-- Watchlist trigger
+CREATE PROCEDURE p_create_watch_list
+@creation_date DATE
+AS
+BEGIN
+    INSERT INTO watchlists (creation_date)
+    VALUES (@creation_date);
+END;
+GO
+
+CREATE PROCEDURE p_add_company_to_watch_list
+@watchlist_id INT,
+@company_id INT, 
+@added_date DATE
+AS
+BEGIN
+    INSERT INTO watchlist_company (watchlist_id, company_id, watchlist_company_added_date)
+    VALUES (@watchlist_id, @company_id, @added_date);
+END;
+GO
+
+CREATE PROCEDURE p_remove_company_from_watch_list 
+@watchlist_id INT, 
+@company_id INT
+AS
+BEGIN
+    DELETE FROM watchlist_company
+    WHERE watchlist_id = @watchlist_id AND company_id = @company_id;
+END;
+GO
+
+CREATE PROCEDURE p_delete_watch_list 
+@watchlist_id INT
+AS
+BEGIN
+    -- First, to remove all companies from the watchlist
+    DELETE FROM watchlist_company
+    WHERE watchlist_id = @watchlist_id;
+
+    -- Then, to delete the watchlist itself
+    DELETE FROM watchlists
+    WHERE watchlist_id = @watchlist_id;
+END;
+GO
+
+
+-- ticker trigger
+
+CREATE TRIGGER ticker_daily_change
+ON tickers
+INSTEAD OF INSERT, UPDATE, DELETE
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM inserted)
+    BEGIN
+        IF (
+            SELECT MAX(ticker_daily_high) 
+            FROM tickers 
+            WHERE ticker_daily_high IN (SELECT ticker_daily_high FROM inserted)
+        ) >= (
+            SELECT MIN(ticker_daily_low) 
+            FROM inserted
+        ) OR (
+            SELECT MIN(ticker_daily_low)
+            FROM tickers 
+            WHERE ticker_daily_low IN (SELECT ticker_daily_low FROM inserted)
+        ) <= (
+            SELECT MAX(ticker_daily_high)
+            FROM inserted
+        )
+        BEGIN
+            -- Update ticker_daily_low
+            UPDATE t
+            SET t.ticker_daily_low = i.ticker_daily_low
+            FROM tickers t
+            INNER JOIN inserted i ON t.ticker_id = i.ticker_id;
+          
+            -- Update ticker_daily_high
+            UPDATE t
+            SET t.ticker_daily_high = i.ticker_daily_high
+            FROM tickers t
+            INNER JOIN inserted i ON t.ticker_id = i.ticker_id;
+        END
+        ELSE
+        BEGIN
+            -- Database constraint error
+            RAISERROR ('Constraint violation', 16, 1);
+        END
+    END
+END;
+
+-- account update trigger
+
+Create trigger t_account_update
+on accounts 
+instead of insert, update , DELETE
+AS BEGIN 
+     IF EXISTS (select count (*) from accounts where account_type = (select inserted.account_type from inserted)
+                 having count (*) < 5) BEGIN
+                 update accounts
+                 set account_type = inserted.account_type
+                 from inserted 
+            WHERE accounts.account_id = inserted.account_id
+            END
+            ELSE BEGIN
+            RAISERROR ('Account Type full: Try a different account type', 17, 1)
+            END
+    END
+
+
+-- (V)  VIEWS
+
+--DOWN VIEWS
+
+drop view if exists v_financials
+GO
+
+--UP VIEWS
+
+Create or alter view v_financials
+
+as (
+select c.company_ticker, c.company_name, c.company_industry,c.company_description,
+f.financial_assets - f.financial_liabilities as equity 
+    from companies c
+    join financials f on c.company_id = f.financial_id
+)
+GO 
+
+-- (VI) Verify Section
+
+
+
+--verifying account transfer trigger:
+-- Testing success of the trigger
+select * from accounts where account_id = 3
+update accounts set account_type = 'CTA' where account_id = 3
+select*from accounts where account_id = 3
+
+--Testing failure to update
+
+select * from accounts where account_id = 22
+update accounts set account_type = 'Retail' where account_id = 22
+select*from accounts where account_id = 22
+
+--Verifying View Execution
+select * from v_financials 
+order by equity DESC
+
+
+SELECT * FROM users;
+SELECT * FROM accounts;
+SELECT * FROM watchlists;
+SELECT * FROM companies;
+SELECT * FROM financials;
+SELECT * FROM tickers;
+SELECT * FROM exchange;
+SELECT * FROM exchange_ticker;
+SELECT * FROM watchlist_company;
+SELECT * FROM user_company;
+GO

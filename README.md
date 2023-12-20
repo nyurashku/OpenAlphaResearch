@@ -70,8 +70,22 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 ## Samples
 
 ### Sample Input
+1. Find all the users from the state of New York with a Retail account. Print their names and emails along with their city, state, Zip code and account type. Sort by city, then by user’s last /first name
+
+2. Ticker categories. Include the ID, name, industry, and ticker IPO Price. Do not include items of industry  “Automotive”. Create a category column based on IPO price. When the ticker price is 35 or more, it is a high-priced stock. When the ticker price is 10 or less, it is a low-priced stock. Everything else is an average stock.
+
+3. Perform an analysis of companies in the “Technology” and “Financial Services” account types. For each company, display the name, industry type, and employee count. Include the minimum, maximum, and average ipo price over each industry type so that the current ipo price can be compared to these values.
+
+**Find more business samples in the "business questions document**
 
 ### Sample Output
+
+1. ![q1](https://github.com/nyurashku/TradeGenius/assets/119478875/12f25cc6-57e4-4125-888d-9fcd08303fa3)
+2. ![q2](https://github.com/nyurashku/TradeGenius/assets/119478875/20c0af6e-eb59-4f9d-90d0-9d60d1931e6b)
+3. ![q3](https://github.com/nyurashku/TradeGenius/assets/119478875/891a7a16-193b-4aa2-93e2-94585c3f1c2a)
+
+
+**Find more business samples in the "business questions document**
 
 ### Dashboard Mock Up
 

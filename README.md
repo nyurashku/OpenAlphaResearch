@@ -81,7 +81,11 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 ### Sample Output
 
 1. ![q1](https://github.com/nyurashku/TradeGenius/assets/119478875/12f25cc6-57e4-4125-888d-9fcd08303fa3)
+
+   
 2. ![q2](https://github.com/nyurashku/TradeGenius/assets/119478875/20c0af6e-eb59-4f9d-90d0-9d60d1931e6b)
+
+   
 3. ![q3](https://github.com/nyurashku/TradeGenius/assets/119478875/891a7a16-193b-4aa2-93e2-94585c3f1c2a)
 
 

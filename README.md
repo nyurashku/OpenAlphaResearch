@@ -76,7 +76,7 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 
 3. Perform an analysis of companies in the “Technology” and “Financial Services” account types. For each company, display the name, industry type, and employee count. Include the minimum, maximum, and average ipo price over each industry type so that the current ipo price can be compared to these values.
 
-**Find more business samples in the "business questions document**
+**Find more business samples in the "business questions document"**
 
 ### Sample Output
 
@@ -89,7 +89,7 @@ Platform accessibility is crucial to TradeGenius' success. To achieve widespread
 3. ![q3](https://github.com/nyurashku/TradeGenius/assets/119478875/891a7a16-193b-4aa2-93e2-94585c3f1c2a)
 
 
-**Find more business samples in the "business questions document**
+**Find more business samples in the "business questions document"**
 
 ### Dashboard Mock Up
 
